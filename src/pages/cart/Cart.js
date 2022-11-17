@@ -1,5 +1,5 @@
 import React from 'react'
-import classes from './Cart.module.scss';
+// import classes from './Cart.module.scss';
 
 const Cart = () => {
   return (

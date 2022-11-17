@@ -1,9 +1,42 @@
+import { onAuthStateChanged } from "firebase/auth";
+import { collection, doc, getDoc } from "firebase/firestore";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Header, Footer } from './components';
+import { auth, db } from "./firebase/config";
 import { Home, Contact, OrdersHistory, Cart, Login, Register, Reset } from './pages';
+import { LOGIN, SET_USERNAME } from "./redux/slice/authSlice";
+
 
 
 function App() {
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // If User is signed in
+
+
+          const usersRef = collection(db, 'users');
+          getDoc(doc(usersRef, user.uid))
+          .then(doc => {
+            // Check if the user is exist and loggedin
+            if (doc.exists() && doc.data().isLoggedIn) {
+              
+              dispatch(LOGIN(doc.data().isLoggedIn));
+            }
+          })
+
+      }else {
+        // If user is Signed out
+        dispatch(LOGIN(false));
+      }
+    })
+  }, [dispatch])
+
   return (
     <>
       <BrowserRouter>

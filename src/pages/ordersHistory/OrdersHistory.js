@@ -1,5 +1,5 @@
 import React from 'react'
-import classes from './OrdersHistory.module.scss';
+// import classes from './OrdersHistory.module.scss';
 
 const OrdersHistory = () => {
   return (
