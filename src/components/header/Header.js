@@ -9,10 +9,12 @@ import { auth, db } from "../../firebase/config";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useDispatch, useSelector } from "react-redux";
-import { SET_ACTIVE_USER, LOGIN, SET_USERNAME } from "../../redux/slice/authSlice";
+import {
+  SET_ACTIVE_USER,
+  LOGIN,
+  SET_USERNAME,
+} from "../../redux/slice/authSlice";
 import { getDoc, doc, collection } from "firebase/firestore";
-
-
 
 const logo = (
   <div className={styles.logo}>
@@ -54,32 +56,29 @@ const Header = () => {
       if (user) {
         // User is signed in
         if (user.displayName === null) {
-          const usersRef = collection(db, 'users');
-          getDoc(doc(usersRef, user.uid))
-          .then(doc => {
+          const usersRef = collection(db, "users");
+          getDoc(doc(usersRef, user.uid)).then((doc) => {
             // Check if the user is exist and loggedin
             if (doc.exists() && doc.data().isLoggedIn) {
-              
-              dispatch(SET_USERNAME(doc.data().userName))
+              dispatch(SET_USERNAME(doc.data().userName));
             }
-          })
-          
-        }else {
-          dispatch(SET_USERNAME(user.displayName))
+          });
+        } else {
+          dispatch(SET_USERNAME(user.displayName));
         }
 
-
-        dispatch(SET_ACTIVE_USER({
-          email: user.email,
-          userID: user.uid
-        }));
+        dispatch(
+          SET_ACTIVE_USER({
+            email: user.email,
+            userID: user.uid,
+          })
+        );
       } else {
         // User is signed out
       }
     });
 
-    console.log('authState =>', authState);
-
+    console.log("authState =>", authState);
   }, [dispatch, userName, isLoggedIn, authState]);
 
   const toggleMenu = () => {
@@ -94,8 +93,8 @@ const Header = () => {
     signOut(auth)
       .then(() => {
         // Sign-out successful.
-        console.log('Auth =>', auth);
-        dispatch(LOGIN(false))
+        console.log("Auth =>", auth);
+        dispatch(LOGIN(false));
         toast.success("Logout Successful!");
         navigate("/login");
       })
@@ -143,26 +142,32 @@ const Header = () => {
             </ul>
             <div className={styles["header-right"]} onClick={hideMenu}>
               <span className={styles.links}>
-                <NavLink to="/login" className={activeLink}>
-                  Login
-                </NavLink>
-                {
-                  isLoggedIn && (
-                <a href="#">
-                  <FaUserCircle />
-                  Hi, { userName }
-                </a>
-                  )
-                }
-                <NavLink to="/register" className={activeLink}>
-                  register
-                </NavLink>
-                <NavLink to="/orders-history" className={activeLink}>
-                  Orders History
-                </NavLink>
-                <NavLink to="/login" onClick={logoutUser}>
-                  Logout
-                </NavLink>
+                {isLoggedIn && (
+                  <>
+                    <span style={{ fontSize: "1.4rem", color: "#ff7722" }}>
+                      <FaUserCircle />
+                      Hi, {userName}
+                    </span>
+                    <NavLink to="/orders-history" className={activeLink}>
+                      Orders History
+                    </NavLink>
+                  </>
+                )}
+                {isLoggedIn && (
+                  <NavLink to="/login" onClick={logoutUser}>
+                    Logout
+                  </NavLink>
+                )}
+                {!isLoggedIn && (
+                  <>
+                    <NavLink to="/login" className={activeLink}>
+                      Login
+                    </NavLink>
+                    <NavLink to="/register" className={activeLink}>
+                      register
+                    </NavLink>
+                  </>
+                )}
               </span>
               {cart}
             </div>
@@ -173,7 +178,7 @@ const Header = () => {
           </div>
         </div>
       </header>
-      <ToastContainer limit={2} style={{fontSize: "16px"}} />
+      <ToastContainer limit={2} style={{ fontSize: "16px" }} />
     </>
   );
 };

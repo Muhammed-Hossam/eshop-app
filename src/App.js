@@ -6,7 +6,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Header, Footer } from './components';
 import { auth, db } from "./firebase/config";
 import { Home, Contact, OrdersHistory, Cart, Login, Register, Reset } from './pages';
-import { LOGIN, SET_USERNAME } from "./redux/slice/authSlice";
+import { LOGIN } from "./redux/slice/authSlice";
 
 
 
